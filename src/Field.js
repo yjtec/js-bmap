@@ -4,6 +4,7 @@ import {getPosition} from './Geo';
 class MapField extends PureComponent{
   constructor(props) {
     super(props);
+    const {lng=null,lat=null} = props.value;
     this.state = {
       lat: null,
       lng: null,
@@ -23,7 +24,7 @@ class MapField extends PureComponent{
     }
     this.setState({
       loading:false,
-      lng,lat
+      lng,lat,isMark
     })
 
     

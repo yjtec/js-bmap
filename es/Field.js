@@ -62,6 +62,12 @@ function (_PureComponent) {
       _this.map.centerAndZoom(point, 16);
     };
 
+    var _props$value = props.value,
+        _props$value$lng = _props$value.lng,
+        _lng = _props$value$lng === void 0 ? null : _props$value$lng,
+        _props$value$lat = _props$value.lat,
+        _lat = _props$value$lat === void 0 ? null : _props$value$lat;
+
     _this.state = {
       lat: null,
       lng: null,
@@ -112,7 +118,8 @@ function (_PureComponent) {
                 this.setState({
                   loading: false,
                   lng: lng,
-                  lat: lat
+                  lat: lat,
+                  isMark: isMark
                 });
                 this.map = new BMap.Map('bmap');
                 this.map.addEventListener('click', this.handleClick);
