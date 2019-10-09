@@ -1,0 +1,25 @@
+{
+  "name": "@yjtec/bmap",
+  "version": "0.0.1",
+  "description": "yjtec bmap",
+  "main": "lib/index.js",
+  "module": "dist/index.esm.js",
+  "files":["lib","es"],
+  "authors": {
+    "name": "kidkang",
+    "email": "723616880@qq.com"
+  },
+  "repository": "https://github.com/yjtec/js-bmap.git/@yjtec/bmap",
+  "scripts": {
+    "dev": "father doc dev",
+    "build": "father build",
+    "watch": "father build --watch"
+  },
+  "peerDependencies": {
+    "react": "16.x"
+  },
+  "devDependencies": {
+    "father": "^2.16.0"
+  },
+  "license": "MIT"
+}
