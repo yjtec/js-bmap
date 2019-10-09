@@ -36,7 +36,10 @@ class MapField extends PureComponent{
     }
     
   }
-
+  setMapCenterByCity = city =>{
+    this.map.clearOverlays();
+    this.map.centerAndZoom(city,16);
+  }
   handleClick = e => {
     this.handleChange(e.point);
   }

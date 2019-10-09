@@ -42,6 +42,12 @@ function (_PureComponent) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(MapField).call(this, props));
 
+    _this.setMapCenterByCity = function (city) {
+      _this.map.clearOverlays();
+
+      _this.map.centerAndZoom(city, 16);
+    };
+
     _this.handleClick = function (e) {
       _this.handleChange(e.point);
     };
