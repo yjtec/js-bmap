@@ -29,6 +29,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 import React, { PureComponent } from 'react';
 import { loadBdMap, getPoint, getMarker } from './AsyncLoadMap';
 import { getPosition } from './Geo';
+import style from './style.less';
 
 var MapField =
 /*#__PURE__*/
@@ -160,7 +161,9 @@ function (_PureComponent) {
 
       return React.createElement("div", _extends({}, rest, {
         id: "bmap"
-      }), React.createElement("div", null, "\u52A0\u8F7D\u4E2D"));
+      }), React.createElement("div", {
+        className: style.loading
+      }, "\u52A0\u8F7D\u4E2D..."));
     }
   }]);
 

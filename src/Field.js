@@ -1,6 +1,7 @@
 import React,{PureComponent} from 'react';
 import {loadBdMap,getPoint,getMarker} from './AsyncLoadMap';
 import {getPosition} from './Geo';
+import style from './style.less';
 class MapField extends PureComponent{
   constructor(props) {
     super(props);
@@ -59,7 +60,7 @@ class MapField extends PureComponent{
     const {value,...rest} = this.props;
     return(
       <div {...rest} id={"bmap"}>
-        <div>加载中</div>
+        <div className={style.loading}>加载中...</div>
       </div>
     )
   }

@@ -4,7 +4,10 @@
   "description": "yjtec bmap",
   "main": "lib/index.js",
   "module": "dist/index.esm.js",
-  "files":["lib","es"],
+  "files": [
+    "lib",
+    "es"
+  ],
   "authors": {
     "name": "kidkang",
     "email": "723616880@qq.com"
