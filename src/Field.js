@@ -4,10 +4,15 @@ import {getPosition} from './Geo';
 class MapField extends PureComponent{
   constructor(props) {
     super(props);
-    const {lng=null,lat=null} = props.value;
+    let lng = null;
+    let lat = null;
+    if(props.value && props.value.lng && props.value.lat){
+      lng = props.value.lng;
+      lat = props.value.lat
+    }
     this.state = {
-      lat: null,
-      lng: null,
+      lat: lat,
+      lng: lng,
       loading:true,
     }
   }
