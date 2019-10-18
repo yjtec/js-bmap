@@ -15,7 +15,8 @@ class MapField extends PureComponent{
       lat: lat,
       lng: lng,
       loading:true,
-      searchinput: false
+      searchinput: false,
+      keyword: ''
     }
   }
   async componentDidMount(){
@@ -65,20 +66,32 @@ class MapField extends PureComponent{
   }
   //通过point 返查地址详情信息 并统一返回父级
   getLocaltionInfo = (point) => {
+    const {keyword} = this.state;
     let geoc = new BMap.Geocoder();
     const {onChange} = this.props;
     geoc.getLocation(point, function(rs){
       let addComp = rs.addressComponents;
       let value = {
         ...point,
-        ...addComp
+        ...addComp,
+        keyword: keyword
       }
       onChange(value);
     });
   }
-  //输入提示信息获取
+  //输入提示信息获取 通过地址获取point
   getRelationList = value => {
-    console.log(value)
+    
+    let myValue = '';
+    if (typeof value == 'object') {
+      myValue = value.province +  value.city +  value.district +  value.street +  value.business;
+    }else{
+      myValue = value;
+    }
+    this.setState({
+      keyword: myValue
+    })
+
     const map = this.map;
     const handleChange = this.handleChange;
     const getLocaltionInfo = this.getLocaltionInfo;
@@ -92,14 +105,14 @@ class MapField extends PureComponent{
     var local = new BMap.LocalSearch(map,{ //智能搜索
       onSearchComplete: myFun
     });
-    local.search(value);
+    local.search(myValue);
 
-    var localList = new BMap.LocalSearch(map);
-    localList.search(value)
+    // var localList = new BMap.LocalSearch(map);
+    // localList.search(myValue)
 
-    if (this.props.getres) {
-      this.props.getres(localList.sf)
-    }
+    // if (this.props.getres) {
+    //   this.props.getres(localList.sf)
+    // }
   }
 
   //关键字提示输入
@@ -107,15 +120,15 @@ class MapField extends PureComponent{
     const {inputid} = this.props;
     const getRelationList = this.getRelationList;
     var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-      {"input" : inputid,"location" : this.map
+      {"input" : inputid,
+      "location" : this.map
     });
 
     ac.addEventListener("onconfirm", function(e) {
       //鼠标点击下拉列表后的事件
       var _value = e.item.value;
-      var myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-
-      getRelationList(myValue); //选择搜索第一条信息
+    
+      getRelationList(_value); //选择搜索第一条信息
     });
   }
 
