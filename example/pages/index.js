@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './index.css';
-import Bmap,{MapField} from '../../lib/';
+import {create,MapField} from '@yjtec/bmap';
 // const BBB = Bmap.create({
 //   position:true
 // });
@@ -27,7 +27,7 @@ class IndexPage extends React.Component{
     );    
   }
 }
-export default Bmap.create({
+export default create({
   position:true,
   renderLoading:<div>二大爷加载中……</div>,
   renderPosLoading:<div>定位中333……</div>
