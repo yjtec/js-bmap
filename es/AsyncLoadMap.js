@@ -47,12 +47,14 @@ function () {
             return importCDN("https://api.map.baidu.com/api?v=3.0&ak=DnebqQePMAKcG35KXzD28owmQKp2YOly&callback=mapinit", "BMap").then(function (re) {});
 
           case 4:
-            window.mapinit = function () {
-              isLoaderMap = true;
-              if (callback) callback();
-              BMap = window.BMap;
-              return window.BMap;
-            };
+            return _context.abrupt("return", new Promise(function (resolve, reject) {
+              window.mapinit = function () {
+                isLoaderMap = true;
+                if (callback) callback();
+                BMap = window.BMap;
+                resolve(window.BMap);
+              };
+            }));
 
           case 5:
           case "end":

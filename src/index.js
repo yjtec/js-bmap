@@ -5,6 +5,11 @@ import {
 
 import MapField from './Field';
 import MapSearchField from './SearchField';
+import {create} from './Bmap';
+export default {
+  create
+};
+
 export {
   AsyncLoadMap,
   loadBdMap,

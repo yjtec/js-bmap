@@ -8,12 +8,14 @@ const loadBdMap = async (callback) => {
   }
   await importCDN("https://api.map.baidu.com/api?v=3.0&ak=DnebqQePMAKcG35KXzD28owmQKp2YOly&callback=mapinit","BMap").then(re => {
   });
-  window.mapinit = () => {
-    isLoaderMap = true;
-    if(callback) callback();
-    BMap = window.BMap;
-    return window.BMap;
-  }
+  return new Promise((resolve,reject)=>{
+    window.mapinit = () => {
+      isLoaderMap = true;
+      if(callback) callback();
+      BMap = window.BMap;
+      resolve(window.BMap);
+    }
+  });
 }
 
 class AsyncLoadMap extends React.Component {
