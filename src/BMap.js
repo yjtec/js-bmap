@@ -7,6 +7,7 @@ export function create(data){
     if(data){
       defaultConfig = {...defaultConfig,...data};
     }
+    console.log(Ele);
     return class Routecs extends Component{
       constructor(props) {
         super(props);
@@ -59,9 +60,14 @@ export function create(data){
         if(loading){
           return this.renderLoad();
         }
-        return (
-          <Ele {...this.props} {...rest}  />
-        )
+        if(typeof Ele  === 'function'){
+          return <Ele {...this.props} {...rest}  />
+        }else if(typeof Ele === 'object'){
+          return React.cloneElement(Ele,{
+            ...rest
+          })
+        }
+        
       }
     }
   }

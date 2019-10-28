@@ -43,6 +43,7 @@ export function create(data) {
       defaultConfig = _objectSpread({}, defaultConfig, {}, data);
     }
 
+    console.log(Ele);
     return (
       /*#__PURE__*/
       function (_Component) {
@@ -163,7 +164,11 @@ export function create(data) {
               return this.renderLoad();
             }
 
-            return React.createElement(Ele, _extends({}, this.props, rest));
+            if (typeof Ele === 'function') {
+              return React.createElement(Ele, _extends({}, this.props, rest));
+            } else if (_typeof(Ele) === 'object') {
+              return React.cloneElement(Ele, _objectSpread({}, rest));
+            }
           }
         }]);
 

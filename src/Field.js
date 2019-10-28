@@ -17,14 +17,33 @@ class MapField extends PureComponent{
       loading:true,
     }
   }
+  getDefault = () => {
+    if(this.props.value && this.props.value.lng){
+      return this.props.value;
+    }
+    if(this.state.lng){
+      const {loading,...stateValue} = this.state;
+      return stateValue;
+    }
+    return {lng:null,lat:null};
+  }
   async componentDidMount(){
-    let {lng,lat} = this.state;
-    let isMark = false;
+    
     const BMap = await loadBdMap();
+    this.map = new BMap.Map('bmap');
+    this.map.addEventListener('click',this.handleClick);
+    let {lng,lat} = this.getDefault();
+    let isMark = false;
     if(!(lng && lat)){
+      this.setState({
+        isGeo:true
+      })
       const point = await getPosition();
       lng = point.lng;
       lat = point.lat;
+      this.setState({
+        isGeo:false
+      })      
     }else{
       isMark = true;
     }
@@ -32,12 +51,8 @@ class MapField extends PureComponent{
       loading:false,
       lng,lat,isMark
     })
-
-    
-    this.map = new BMap.Map('bmap');
-    this.map.addEventListener('click',this.handleClick);
     this.setMapCenter(lng,lat);
-    if(isMark){
+    if(!isMark){
       this.handleChange(getPoint(lng,lat));
     }
     
@@ -61,11 +76,12 @@ class MapField extends PureComponent{
     this.map.centerAndZoom(point,16);
   }
   render(){
-    const {loading} = this.state;
+    const {loading,isGeo} = this.state;
     const {value,...rest} = this.props;
     return(
       <div {...rest} id={"bmap"}>
-        <div className={style.loading}>加载中...</div>
+        {isGeo !== undefined && isGeo && <div>定位中...</div>}
+        {!loading && <div className={style.loading}>加载中...</div>}
       </div>
     )
   }

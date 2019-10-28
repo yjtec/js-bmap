@@ -2,13 +2,13 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -42,6 +42,25 @@ function (_PureComponent) {
     _classCallCheck(this, MapField);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(MapField).call(this, props));
+
+    _this.getDefault = function () {
+      if (_this.props.value && _this.props.value.lng) {
+        return _this.props.value;
+      }
+
+      if (_this.state.lng) {
+        var _this$state = _this.state,
+            loading = _this$state.loading,
+            stateValue = _objectWithoutProperties(_this$state, ["loading"]);
+
+        return stateValue;
+      }
+
+      return {
+        lng: null,
+        lat: null
+      };
+    };
 
     _this.setMapCenterByCity = function (city) {
       _this.map.clearOverlays();
@@ -91,54 +110,60 @@ function (_PureComponent) {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var _this$state, lng, lat, isMark, BMap, point;
+        var BMap, _this$getDefault, lng, lat, isMark, point;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this$state = this.state, lng = _this$state.lng, lat = _this$state.lat;
-                isMark = false;
-                _context.next = 4;
+                _context.next = 2;
                 return loadBdMap();
 
-              case 4:
+              case 2:
                 BMap = _context.sent;
+                this.map = new BMap.Map('bmap');
+                this.map.addEventListener('click', this.handleClick);
+                _this$getDefault = this.getDefault(), lng = _this$getDefault.lng, lat = _this$getDefault.lat;
+                isMark = false;
 
                 if (lng && lat) {
-                  _context.next = 13;
+                  _context.next = 17;
                   break;
                 }
 
-                _context.next = 8;
+                this.setState({
+                  isGeo: true
+                });
+                _context.next = 11;
                 return getPosition();
 
-              case 8:
+              case 11:
                 point = _context.sent;
                 lng = point.lng;
                 lat = point.lat;
-                _context.next = 14;
+                this.setState({
+                  isGeo: false
+                });
+                _context.next = 18;
                 break;
 
-              case 13:
+              case 17:
                 isMark = true;
 
-              case 14:
+              case 18:
                 this.setState({
                   loading: false,
                   lng: lng,
                   lat: lat,
                   isMark: isMark
                 });
-                this.map = new BMap.Map('bmap');
-                this.map.addEventListener('click', this.handleClick);
                 this.setMapCenter(lng, lat);
 
-                if (isMark) {
+                if (!isMark) {
                   this.handleChange(getPoint(lng, lat));
                 }
 
-              case 19:
+              case 21:
               case "end":
                 return _context.stop();
             }
@@ -155,7 +180,9 @@ function (_PureComponent) {
   }, {
     key: "render",
     value: function render() {
-      var loading = this.state.loading;
+      var _this$state2 = this.state,
+          loading = _this$state2.loading,
+          isGeo = _this$state2.isGeo;
 
       var _this$props = this.props,
           value = _this$props.value,
@@ -163,7 +190,7 @@ function (_PureComponent) {
 
       return React.createElement("div", _extends({}, rest, {
         id: "bmap"
-      }), React.createElement("div", {
+      }), isGeo !== undefined && isGeo && React.createElement("div", null, "\u5B9A\u4F4D\u4E2D..."), !loading && React.createElement("div", {
         className: style.loading
       }, "\u52A0\u8F7D\u4E2D..."));
     }
