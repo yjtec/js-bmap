@@ -13,6 +13,11 @@ const routes = [
     component: require('../index.js').default,
   },
   {
+    path: '/position',
+    exact: true,
+    component: require('../position.js').default,
+  },
+  {
     component: () =>
       React.createElement(
         require('/Users/kidkang/.config/yarn/global/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')

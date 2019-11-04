@@ -1,18 +1,19 @@
 import React,{Component} from 'react';
 import {loadBdMap} from './AsyncLoadMap';
 import {getPosition} from './Geo';
+import {setCachePoint,getCachePoint} from './utils/local';
+import GeoContext from './GeoContext';
 export function create(data){
   return (Ele) => {
     let defaultConfig = {};
     if(data){
       defaultConfig = {...defaultConfig,...data};
     }
-    console.log(Ele);
     return class Routecs extends Component{
       constructor(props) {
         super(props);
         const defaultState ={};
-        const {position} = defaultConfig;
+        const {position,cacheTime} = defaultConfig;
         if(position){
           defaultState.isGeo = true;
         }
@@ -22,18 +23,31 @@ export function create(data){
         }
       }
       async componentDidMount(){
-        const {position} = defaultConfig;
+        const {position,cacheTime} = defaultConfig;
         const BMap = await loadBdMap();
         this.setState({
           loading:false,
           BMap:BMap
         })
-        if(position){
-          const point = await getPosition();
-          this.setState({
-            isGeo:false,
-            point:point
-          })
+       
+        if(position){ //需要定位
+          const cachePoint = getCachePoint();
+          if(cachePoint){
+            this.setState({
+              isGeo:false,
+              point:cachePoint
+            })            
+          }else{
+            const point = await getPosition();
+            const expiredAt = cacheTime ? cacheTime : 10;
+            setCachePoint(point,expiredAt);
+            this.setState({
+              isGeo:false,
+              point:point
+            })
+          }
+          
+          
         }
       }
       renderLoadPos(){
@@ -60,14 +74,24 @@ export function create(data){
         if(loading){
           return this.renderLoad();
         }
+
+        let ReturnEle = '';
         if(typeof Ele  === 'function'){
-          return <Ele {...this.props} {...rest}  />
+          ReturnEle = <Ele {...this.props} {...rest}  />
+          
         }else if(typeof Ele === 'object'){
-          return React.cloneElement(Ele,{
+          ReturnEle =  React.cloneElement(Ele,{
+            ...this.props,
             ...rest
           })
         }
-        
+        return (
+          <GeoContext.Provider
+            value={rest}
+          >
+            {ReturnEle}
+          </GeoContext.Provider>
+        )
       }
     }
   }

@@ -35,6 +35,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 import React, { Component } from 'react';
 import { loadBdMap } from './AsyncLoadMap';
 import { getPosition } from './Geo';
+import { setCachePoint, getCachePoint } from './utils/local';
+import GeoContext from './GeoContext';
 export function create(data) {
   return function (Ele) {
     var defaultConfig = {};
@@ -43,7 +45,6 @@ export function create(data) {
       defaultConfig = _objectSpread({}, defaultConfig, {}, data);
     }
 
-    console.log(Ele);
     return (
       /*#__PURE__*/
       function (_Component) {
@@ -57,7 +58,8 @@ export function create(data) {
           _this = _possibleConstructorReturn(this, _getPrototypeOf(Routecs).call(this, props));
           var defaultState = {};
           var _defaultConfig = defaultConfig,
-              position = _defaultConfig.position;
+              position = _defaultConfig.position,
+              cacheTime = _defaultConfig.cacheTime;
 
           if (position) {
             defaultState.isGeo = true;
@@ -75,13 +77,13 @@ export function create(data) {
             var _componentDidMount = _asyncToGenerator(
             /*#__PURE__*/
             regeneratorRuntime.mark(function _callee() {
-              var _defaultConfig2, position, BMap, point;
+              var _defaultConfig2, position, cacheTime, BMap, cachePoint, point, expiredAt;
 
               return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                   switch (_context.prev = _context.next) {
                     case 0:
-                      _defaultConfig2 = defaultConfig, position = _defaultConfig2.position;
+                      _defaultConfig2 = defaultConfig, position = _defaultConfig2.position, cacheTime = _defaultConfig2.cacheTime;
                       _context.next = 3;
                       return loadBdMap();
 
@@ -93,21 +95,39 @@ export function create(data) {
                       });
 
                       if (!position) {
-                        _context.next = 10;
+                        _context.next = 17;
                         break;
                       }
 
-                      _context.next = 8;
+                      //需要定位
+                      cachePoint = getCachePoint();
+
+                      if (!cachePoint) {
+                        _context.next = 11;
+                        break;
+                      }
+
+                      this.setState({
+                        isGeo: false,
+                        point: cachePoint
+                      });
+                      _context.next = 17;
+                      break;
+
+                    case 11:
+                      _context.next = 13;
                       return getPosition();
 
-                    case 8:
+                    case 13:
                       point = _context.sent;
+                      expiredAt = cacheTime ? cacheTime : 10;
+                      setCachePoint(point, expiredAt);
                       this.setState({
                         isGeo: false,
                         point: point
                       });
 
-                    case 10:
+                    case 17:
                     case "end":
                       return _context.stop();
                   }
@@ -164,11 +184,17 @@ export function create(data) {
               return this.renderLoad();
             }
 
+            var ReturnEle = '';
+
             if (typeof Ele === 'function') {
-              return React.createElement(Ele, _extends({}, this.props, rest));
+              ReturnEle = React.createElement(Ele, _extends({}, this.props, rest));
             } else if (_typeof(Ele) === 'object') {
-              return React.cloneElement(Ele, _objectSpread({}, rest));
+              ReturnEle = React.cloneElement(Ele, _objectSpread({}, this.props, {}, rest));
             }
+
+            return React.createElement(GeoContext.Provider, {
+              value: rest
+            }, ReturnEle);
           }
         }]);
 
