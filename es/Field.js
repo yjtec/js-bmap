@@ -110,7 +110,7 @@ function (_PureComponent) {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var BMap, _this$getDefault, lng, lat, isMark, point;
+        var BMap, map, _this$getDefault, lng, lat, isMark, point;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -121,36 +121,50 @@ function (_PureComponent) {
 
               case 2:
                 BMap = _context.sent;
-                this.map = new BMap.Map('bmap');
-                this.map.addEventListener('click', this.handleClick);
+                map = new BMap.Map('bmap');
+                this.map = map;
+                /*兼容手机点击事件*/
+
+                map.addEventListener("touchmove", function (e) {
+                  map.enableDragging();
+                }); // TODO: 触摸结束时触发次此事件  此时开启禁止拖动
+
+                map.addEventListener("touchend", function (e) {
+                  map.disableDragging();
+                });
+                map.disableDragging();
+                map.enableScrollWheelZoom(true);
+                /*监听事件结束*/
+
+                map.addEventListener('click', this.handleClick);
                 _this$getDefault = this.getDefault(), lng = _this$getDefault.lng, lat = _this$getDefault.lat;
                 isMark = false;
 
                 if (lng && lat) {
-                  _context.next = 17;
+                  _context.next = 22;
                   break;
                 }
 
                 this.setState({
                   isGeo: true
                 });
-                _context.next = 11;
+                _context.next = 16;
                 return getPosition();
 
-              case 11:
+              case 16:
                 point = _context.sent;
                 lng = point.lng;
                 lat = point.lat;
                 this.setState({
                   isGeo: false
                 });
-                _context.next = 18;
+                _context.next = 23;
                 break;
 
-              case 17:
+              case 22:
                 isMark = true;
 
-              case 18:
+              case 23:
                 this.setState({
                   loading: false,
                   lng: lng,
@@ -163,7 +177,7 @@ function (_PureComponent) {
                 // }else{
                 // }
 
-              case 21:
+              case 26:
               case "end":
                 return _context.stop();
             }
@@ -190,9 +204,7 @@ function (_PureComponent) {
 
       return React.createElement("div", _extends({}, rest, {
         id: "bmap"
-      }), isGeo !== undefined && isGeo && React.createElement("div", null, "\u5B9A\u4F4D\u4E2D..."), !loading && React.createElement("div", {
-        className: style.loading
-      }, "\u52A0\u8F7D\u4E2D..."));
+      }), isGeo !== undefined && isGeo && React.createElement("div", null, "\u5B9A\u4F4D\u4E2D..."));
     }
   }]);
 
