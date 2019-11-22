@@ -52,9 +52,12 @@ class MapField extends PureComponent{
       lng,lat,isMark
     })
     this.setMapCenter(lng,lat);
-    if(!isMark){
-      this.handleChange(getPoint(lng,lat));
-    }
+    this.handleChange(getPoint(lng,lat));
+    // if(!isMark){
+    //   this.handleChange(getPoint(lng,lat));
+    // }else{
+
+    // }
     
   }
   setMapCenterByCity = city =>{

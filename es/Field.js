@@ -158,10 +158,10 @@ function (_PureComponent) {
                   isMark: isMark
                 });
                 this.setMapCenter(lng, lat);
-
-                if (!isMark) {
-                  this.handleChange(getPoint(lng, lat));
-                }
+                this.handleChange(getPoint(lng, lat)); // if(!isMark){
+                //   this.handleChange(getPoint(lng,lat));
+                // }else{
+                // }
 
               case 21:
               case "end":
