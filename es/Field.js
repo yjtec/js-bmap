@@ -30,6 +30,7 @@ import React, { PureComponent } from 'react';
 import { loadBdMap, getPoint, getMarker } from './AsyncLoadMap';
 import { getPosition } from './Geo';
 import style from './style.less';
+import { isMobile } from './utils/utils';
 
 var MapField =
 /*#__PURE__*/
@@ -123,48 +124,52 @@ function (_PureComponent) {
                 BMap = _context.sent;
                 map = new BMap.Map('bmap');
                 this.map = map;
-                /*兼容手机点击事件*/
 
-                map.addEventListener("touchmove", function (e) {
-                  map.enableDragging();
-                }); // TODO: 触摸结束时触发次此事件  此时开启禁止拖动
+                if (isMobile()) {
+                  //判断是手机端
 
-                map.addEventListener("touchend", function (e) {
+                  /*兼容手机点击事件*/
+                  map.addEventListener("touchmove", function (e) {
+                    map.enableDragging();
+                  }); // TODO: 触摸结束时触发次此事件  此时开启禁止拖动
+
+                  map.addEventListener("touchend", function (e) {
+                    map.disableDragging();
+                  });
                   map.disableDragging();
-                });
-                map.disableDragging();
-                map.enableScrollWheelZoom(true);
-                /*监听事件结束*/
+                  map.enableScrollWheelZoom(true);
+                  /*监听事件结束*/
+                }
 
                 map.addEventListener('click', this.handleClick);
                 _this$getDefault = this.getDefault(), lng = _this$getDefault.lng, lat = _this$getDefault.lat;
                 isMark = false;
 
                 if (lng && lat) {
-                  _context.next = 22;
+                  _context.next = 19;
                   break;
                 }
 
                 this.setState({
                   isGeo: true
                 });
-                _context.next = 16;
+                _context.next = 13;
                 return getPosition();
 
-              case 16:
+              case 13:
                 point = _context.sent;
                 lng = point.lng;
                 lat = point.lat;
                 this.setState({
                   isGeo: false
                 });
-                _context.next = 23;
+                _context.next = 20;
                 break;
 
-              case 22:
+              case 19:
                 isMark = true;
 
-              case 23:
+              case 20:
                 this.setState({
                   loading: false,
                   lng: lng,
@@ -177,7 +182,7 @@ function (_PureComponent) {
                 // }else{
                 // }
 
-              case 26:
+              case 23:
               case "end":
                 return _context.stop();
             }

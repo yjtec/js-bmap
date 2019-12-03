@@ -1,6 +1,22 @@
 import React from 'react';
 import styles from './index.css';
-import {create,MapField,GeoContext} from '@yjtec/bmap';
+import {create,MapField,GeoContext,Convertor} from '@yjtec/bmap';
+import {wxUtils,WxContext} from 'yjtec-wx';
+const isWx = () => {
+  if (window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+      return true;
+  }
+  return false;
+}
+const WxPosition  = async () => {
+  if(isWx()){
+    const re = await wxUtils.getPosition();
+    const point = await Convertor(re);
+    return point;
+  }else{
+    return false;
+  }
+}
 // const BBB = Bmap.create({
 //   position:true
 // });
@@ -27,6 +43,10 @@ class IndexPage extends React.Component{
 }
 export default create({
   position:true,
+  // renderPosition:async ()=>{
+  //   return {lng:0,lat:1}
+  // },
+  renderPosition: WxPosition,
   renderLoading:<div>二大爷加载中……</div>,
   renderPosLoading:<div>定位中333……</div>
 })(IndexPage);

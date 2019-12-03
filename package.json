@@ -1,6 +1,6 @@
 {
   "name": "@yjtec/bmap",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "yjtec bmap",
   "main": "lib/index.js",
   "module": "dist/index.esm.js",
@@ -21,8 +21,9 @@
   "peerDependencies": {
     "react": "16.x"
   },
-  "devDependencies": {
-    "father": "^2.16.0"
-  },
-  "license": "MIT"
+  "devDependencies": {},
+  "license": "MIT",
+  "dependencies": {
+    "react-media": "^1.10.0"
+  }
 }

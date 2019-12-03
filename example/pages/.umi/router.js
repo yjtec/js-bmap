@@ -3,26 +3,50 @@ import { Router as DefaultRouter, Route, Switch } from 'react-router-dom';
 import dynamic from 'umi/dynamic';
 import renderRoutes from 'umi/lib/renderRoutes';
 import history from '@tmp/history';
+import RendererWrapper0 from '/Volumes/work/js-bmap/example/pages/.umi/WxWrapper.jsx';
 
 const Router = DefaultRouter;
 
 const routes = [
   {
     path: '/',
+    redirect: '/home/index',
     exact: true,
-    component: require('../index.js').default,
   },
   {
-    path: '/position',
-    exact: true,
-    component: require('../position.js').default,
+    path: '/',
+    routes: [
+      {
+        path: '/home/index',
+        component: require('../index').default,
+        exact: true,
+      },
+      {
+        path: '/wx',
+        component: require('../wxposition').default,
+        exact: true,
+      },
+      {
+        path: '/media',
+        component: require('../media').default,
+        exact: true,
+      },
+      {
+        component: () =>
+          React.createElement(
+            require('/Users/kidkang/.config/yarn/global/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
+              .default,
+            { pagesPath: 'pages', hasRoutesInConfig: true },
+          ),
+      },
+    ],
   },
   {
     component: () =>
       React.createElement(
         require('/Users/kidkang/.config/yarn/global/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
           .default,
-        { pagesPath: 'pages', hasRoutesInConfig: false },
+        { pagesPath: 'pages', hasRoutesInConfig: true },
       ),
   },
 ];
@@ -58,6 +82,10 @@ export default class RouterWrapper extends React.Component {
 
   render() {
     const props = this.props || {};
-    return <Router history={history}>{renderRoutes(routes, props)}</Router>;
+    return (
+      <RendererWrapper0>
+        <Router history={history}>{renderRoutes(routes, props)}</Router>
+      </RendererWrapper0>
+    );
   }
 }

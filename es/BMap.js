@@ -77,13 +77,13 @@ export function create(data) {
             var _componentDidMount = _asyncToGenerator(
             /*#__PURE__*/
             regeneratorRuntime.mark(function _callee() {
-              var _defaultConfig2, position, cacheTime, BMap, cachePoint, point, expiredAt;
+              var _defaultConfig2, position, cacheTime, renderPosition, BMap, cachePoint, point, tmp, thunk, expiredAt;
 
               return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                   switch (_context.prev = _context.next) {
                     case 0:
-                      _defaultConfig2 = defaultConfig, position = _defaultConfig2.position, cacheTime = _defaultConfig2.cacheTime;
+                      _defaultConfig2 = defaultConfig, position = _defaultConfig2.position, cacheTime = _defaultConfig2.cacheTime, renderPosition = _defaultConfig2.renderPosition;
                       _context.next = 3;
                       return loadBdMap();
 
@@ -95,7 +95,7 @@ export function create(data) {
                       });
 
                       if (!position) {
-                        _context.next = 17;
+                        _context.next = 36;
                         break;
                       }
 
@@ -111,15 +111,65 @@ export function create(data) {
                         isGeo: false,
                         point: cachePoint
                       });
-                      _context.next = 17;
+                      _context.next = 36;
                       break;
 
                     case 11:
-                      _context.next = 13;
+                      point = {};
+
+                      if (!renderPosition) {
+                        _context.next = 30;
+                        break;
+                      }
+
+                      //console.log(renderPosition);
+                      thunk = renderPosition();
+
+                      if (!(thunk instanceof Promise)) {
+                        _context.next = 20;
+                        break;
+                      }
+
+                      _context.next = 17;
+                      return thunk;
+
+                    case 17:
+                      tmp = _context.sent;
+                      _context.next = 21;
+                      break;
+
+                    case 20:
+                      tmp = thunk;
+
+                    case 21:
+                      if (!tmp) {
+                        _context.next = 25;
+                        break;
+                      }
+
+                      point = tmp;
+                      _context.next = 28;
+                      break;
+
+                    case 25:
+                      _context.next = 27;
                       return getPosition();
 
-                    case 13:
+                    case 27:
                       point = _context.sent;
+
+                    case 28:
+                      _context.next = 33;
+                      break;
+
+                    case 30:
+                      _context.next = 32;
+                      return getPosition();
+
+                    case 32:
+                      point = _context.sent;
+
+                    case 33:
                       expiredAt = cacheTime ? cacheTime : 10;
                       setCachePoint(point, expiredAt);
                       this.setState({
@@ -127,7 +177,7 @@ export function create(data) {
                         point: point
                       });
 
-                    case 17:
+                    case 36:
                     case "end":
                       return _context.stop();
                   }

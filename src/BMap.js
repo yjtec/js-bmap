@@ -23,7 +23,7 @@ export function create(data){
         }
       }
       async componentDidMount(){
-        const {position,cacheTime} = defaultConfig;
+        const {position,cacheTime,renderPosition} = defaultConfig;
         const BMap = await loadBdMap();
         this.setState({
           loading:false,
@@ -36,9 +36,27 @@ export function create(data){
             this.setState({
               isGeo:false,
               point:cachePoint
-            })            
+            })
           }else{
-            const point = await getPosition();
+            let point = {}
+            if(renderPosition){
+              //console.log(renderPosition);
+              let tmp;
+              const thunk = renderPosition();
+              if(thunk instanceof Promise){
+                 tmp = await thunk;
+              }else{
+                tmp = thunk;
+              }
+              if(tmp){
+                point = tmp;
+              }else{
+                point = await getPosition();
+              }
+              
+            }else{
+              point = await getPosition();
+            }
             const expiredAt = cacheTime ? cacheTime : 10;
             setCachePoint(point,expiredAt);
             this.setState({

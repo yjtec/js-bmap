@@ -2,7 +2,7 @@ import React,{PureComponent} from 'react';
 import {loadBdMap,getPoint,getMarker} from './AsyncLoadMap';
 import {getPosition} from './Geo';
 import style from './style.less';
-
+import {isMobile} from './utils/utils';
 class MapField extends PureComponent{
   constructor(props) {
     super(props);
@@ -29,23 +29,23 @@ class MapField extends PureComponent{
     return {lng:null,lat:null};
   }
   async componentDidMount(){
-    
     const BMap = await loadBdMap();
     const map = new BMap.Map('bmap');
     this.map = map;
-    /*兼容手机点击事件*/
-    map.addEventListener("touchmove", function (e) {
-      map.enableDragging();
-    });
-    // TODO: 触摸结束时触发次此事件  此时开启禁止拖动
-    map.addEventListener("touchend", function (e) {
+    if(isMobile()){//判断是手机端
+      /*兼容手机点击事件*/
+      map.addEventListener("touchmove", function (e) {
+        map.enableDragging();
+      });
+      // TODO: 触摸结束时触发次此事件  此时开启禁止拖动
+      map.addEventListener("touchend", function (e) {
+        map.disableDragging();
+      });    
       map.disableDragging();
-    });    
-    map.disableDragging();
-    map.enableScrollWheelZoom(true);
-    /*监听事件结束*/
+      map.enableScrollWheelZoom(true);
+      /*监听事件结束*/
+    }
     map.addEventListener('click',this.handleClick);
-    
     let {lng,lat} = this.getDefault();
     let isMark = false;
     if(!(lng && lat)){

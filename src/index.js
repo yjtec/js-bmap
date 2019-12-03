@@ -4,6 +4,7 @@ import {
 } from './AsyncLoadMap';
 import GeoContext from './GeoContext';
 import MapField from './Field';
+import {Convertor} from './Convertor';
 import MapSearchField from './SearchField';
 import {create} from './BMap';
 import {getCachePoint} from './utils/local';
@@ -14,5 +15,6 @@ export {
   MapSearchField,
   create,
   GeoContext,
-  getCachePoint
+  getCachePoint,
+  Convertor
 }
