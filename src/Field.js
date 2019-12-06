@@ -44,6 +44,8 @@ class MapField extends PureComponent{
       map.disableDragging();
       map.enableScrollWheelZoom(true);
       /*监听事件结束*/
+    }else{
+      map.enableScrollWheelZoom(true);
     }
     map.addEventListener('click',this.handleClick);
     let {lng,lat} = this.getDefault();
