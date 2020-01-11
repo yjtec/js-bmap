@@ -30,7 +30,8 @@ class MapField extends PureComponent{
   }
   async componentDidMount(){
     const BMap = await loadBdMap();
-    const map = new BMap.Map('bmap');
+    const {mapprops} = this.props;
+    const map = new BMap.Map('bmap',mapprops);
     this.map = map;
     if(isMobile()){//判断是手机端
       /*兼容手机点击事件*/
@@ -47,7 +48,10 @@ class MapField extends PureComponent{
     }else{
       map.enableScrollWheelZoom(true);
     }
-    map.addEventListener('click',this.handleClick);
+    const {enableMapClick} = mapprops;
+    if(enableMapClick){
+      map.addEventListener('click',this.handleClick);
+    }
     let {lng,lat} = this.getDefault();
     let isMark = false;
     if(!(lng && lat)){
@@ -105,7 +109,10 @@ class MapField extends PureComponent{
   }
 }
 MapField.defaultProps ={
-  onChange:()=>{}
+  onChange:()=>{},
+  mapprops:{
+    enableMapClick: true
+  }
 }
 
 export default MapField;

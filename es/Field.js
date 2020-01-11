@@ -111,7 +111,7 @@ function (_PureComponent) {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var BMap, map, _this$getDefault, lng, lat, isMark, point;
+        var BMap, mapprops, map, enableMapClick, _this$getDefault, lng, lat, isMark, point;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -122,7 +122,8 @@ function (_PureComponent) {
 
               case 2:
                 BMap = _context.sent;
-                map = new BMap.Map('bmap');
+                mapprops = this.props.mapprops;
+                map = new BMap.Map('bmap', mapprops);
                 this.map = map;
 
                 if (isMobile()) {
@@ -143,35 +144,40 @@ function (_PureComponent) {
                   map.enableScrollWheelZoom(true);
                 }
 
-                map.addEventListener('click', this.handleClick);
+                enableMapClick = mapprops.enableMapClick;
+
+                if (enableMapClick) {
+                  map.addEventListener('click', this.handleClick);
+                }
+
                 _this$getDefault = this.getDefault(), lng = _this$getDefault.lng, lat = _this$getDefault.lat;
                 isMark = false;
 
                 if (lng && lat) {
-                  _context.next = 19;
+                  _context.next = 21;
                   break;
                 }
 
                 this.setState({
                   isGeo: true
                 });
-                _context.next = 13;
+                _context.next = 15;
                 return getPosition();
 
-              case 13:
+              case 15:
                 point = _context.sent;
                 lng = point.lng;
                 lat = point.lat;
                 this.setState({
                   isGeo: false
                 });
-                _context.next = 20;
+                _context.next = 22;
                 break;
 
-              case 19:
+              case 21:
                 isMark = true;
 
-              case 20:
+              case 22:
                 this.setState({
                   loading: false,
                   lng: lng,
@@ -184,7 +190,7 @@ function (_PureComponent) {
                 // }else{
                 // }
 
-              case 23:
+              case 25:
               case "end":
                 return _context.stop();
             }
@@ -219,6 +225,9 @@ function (_PureComponent) {
 }(PureComponent);
 
 MapField.defaultProps = {
-  onChange: function onChange() {}
+  onChange: function onChange() {},
+  mapprops: {
+    enableMapClick: true
+  }
 };
 export default MapField;

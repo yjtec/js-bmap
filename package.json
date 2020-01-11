@@ -1,6 +1,6 @@
 {
   "name": "@yjtec/bmap",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "yjtec bmap",
   "main": "lib/index.js",
   "module": "dist/index.esm.js",
