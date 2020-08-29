@@ -26,6 +26,9 @@ class MapField extends PureComponent{
     let isMark = false;
     const BMap = await loadBdMap();
     if(!(lng && lat)){
+      this.setState({
+        isGeo:true
+      })
       const point = await getPosition();
       lng = point.lng;
       lat = point.lat;
@@ -36,6 +39,10 @@ class MapField extends PureComponent{
       loading:false,
       lng,lat,isMark,
       searchinput: searchinput == undefined || searchinput == 'false' ? false : true
+    },()=>{
+      this.setState({
+        isGeo:false
+      })
     })
 
     this.map = new BMap.Map(id);
@@ -146,11 +153,11 @@ class MapField extends PureComponent{
     this.handleChange(point);
   }
   render(){
-    const {loading} = this.state;
+    const {loading,isGeo} = this.state;
     const {value,...rest} = this.props;
     return(
       <div {...rest}>
-        <div style={{width:'100%',lineHeight:'50px',textAlign:'center'}}>加载中...</div>
+        {isGeo !== undefined && isGeo && <div className={style.renderloading}>加载中...</div>}
       </div>
     )
   }
