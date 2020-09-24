@@ -30,7 +30,7 @@ class MapField extends PureComponent{
   }
   async componentDidMount(){
     const BMap = await loadBdMap();
-    const {mapprops} = this.props;
+    const {mapprops,mobileDrag} = this.props;
     const map = new BMap.Map('bmap',mapprops);
     this.map = map;
     if(isMobile()){//判断是手机端
@@ -41,8 +41,11 @@ class MapField extends PureComponent{
       // TODO: 触摸结束时触发次此事件  此时开启禁止拖动
       map.addEventListener("touchend", function (e) {
         map.disableDragging();
-      });    
-      map.disableDragging();
+      });
+      if(!mobileDrag){
+        //避免手机端初始化时不能拖动问题
+        map.disableDragging();
+      }   
       map.enableScrollWheelZoom(true);
       /*监听事件结束*/
     }else{
